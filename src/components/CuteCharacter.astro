@@ -1,0 +1,143 @@
+---
+// src/components/CuteCharacter.astro
+---
+<div id="cute-character-wrapper" data-state="default" class="w-64 h-64 mx-auto relative transition-transform duration-300">
+  <!-- Cute SVG Character -->
+  <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-lg select-none">
+    <!-- Ears -->
+    <circle cx="50" cy="50" r="22" fill="#fff5f6" stroke="#4a282d" stroke-width="6" />
+    <circle cx="50" cy="50" r="12" fill="#ffd1dc" />
+    <circle cx="150" cy="50" r="22" fill="#fff5f6" stroke="#4a282d" stroke-width="6" />
+    <circle cx="150" cy="50" r="12" fill="#ffd1dc" />
+
+    <!-- Body / Head -->
+    <rect x="35" y="45" width="130" height="120" rx="60" fill="#fff5f6" stroke="#4a282d" stroke-width="6" />
+    
+    <!-- Cheeks (Blush) -->
+    <ellipse cx="60" cy="125" rx="14" ry="9" fill="#ffaab3" class="blush transition-all duration-300" />
+    <ellipse cx="140" cy="125" rx="14" ry="9" fill="#ffaab3" class="blush transition-all duration-300" />
+    
+    <!-- Eyes -->
+    <g class="eyes">
+      <!-- Default Left & Right Eye -->
+      <g class="eye-default">
+        <circle cx="75" cy="105" r="8" fill="#4a282d" class="eye-blink-left" />
+        <circle cx="125" cy="105" r="8" fill="#4a282d" class="eye-blink-right" />
+      </g>
+      
+      <!-- Pleading Eyes -->
+      <g class="eye-pleading hidden">
+        <!-- Sparkly eyes -->
+        <circle cx="75" cy="105" r="13" fill="#4a282d" />
+        <circle cx="72" cy="101" r="4.5" fill="#fff" />
+        <circle cx="78" cy="109" r="2.5" fill="#fff" />
+        
+        <circle cx="125" cy="105" r="13" fill="#4a282d" />
+        <circle cx="122" cy="101" r="4.5" fill="#fff" />
+        <circle cx="128" cy="109" r="2.5" fill="#fff" />
+        
+        <!-- Tear drops -->
+        <path d="M 62 115 Q 60 125 65 125 Q 70 125 68 115 Z" fill="#aee2ff" class="animate-bounce" />
+        <path d="M 138 115 Q 136 125 141 125 Q 146 125 144 115 Z" fill="#aee2ff" class="animate-bounce" />
+      </g>
+
+      <!-- Happy Eyes -->
+      <g class="eye-happy hidden">
+        <path d="M 65 108 Q 75 96 85 108" fill="none" stroke="#4a282d" stroke-width="6" stroke-linecap="round" />
+        <path d="M 115 108 Q 125 96 135 108" fill="none" stroke="#4a282d" stroke-width="6" stroke-linecap="round" />
+      </g>
+      
+      <!-- Angry Eyebrows -->
+      <g class="eyebrows-angry hidden">
+        <path d="M 62 92 L 82 98" stroke="#4a282d" stroke-width="6" stroke-linecap="round" />
+        <path d="M 138 92 L 118 98" stroke="#4a282d" stroke-width="6" stroke-linecap="round" />
+      </g>
+    </g>
+
+    <!-- Mouth -->
+    <g class="mouth">
+      <!-- Default Mouth -->
+      <path d="M 94 122 Q 100 128 106 122" fill="none" stroke="#4a282d" stroke-width="5" stroke-linecap="round" class="mouth-default" />
+      <path d="M 88 122 Q 94 128 100 122" fill="none" stroke="#4a282d" stroke-width="5" stroke-linecap="round" class="mouth-default" />
+      
+      <!-- Pleading Mouth -->
+      <path d="M 92 128 Q 100 120 108 128" fill="none" stroke="#4a282d" stroke-width="5" stroke-linecap="round" class="mouth-pleading hidden" />
+      
+      <!-- Happy Mouth -->
+      <path d="M 90 122 Q 100 142 110 122 Z" fill="#ff7b88" stroke="#4a282d" stroke-width="5" stroke-linecap="round" class="mouth-happy hidden" />
+    </g>
+
+    <!-- Tiny Paws -->
+    <circle cx="65" cy="165" r="12" fill="#fff5f6" stroke="#4a282d" stroke-width="5" class="paw-left transition-transform duration-300" />
+    <circle cx="135" cy="165" r="12" fill="#fff5f6" stroke="#4a282d" stroke-width="5" class="paw-right transition-transform duration-300" />
+  </svg>
+</div>
+
+<style>
+  /* Eye Blinking Animation */
+  @keyframes blink {
+    0%, 90%, 100% { transform: scaleY(1); }
+    95% { transform: scaleY(0.1); }
+  }
+  
+  .eye-blink-left {
+    transform-origin: 75px 105px;
+    animation: blink 4s infinite;
+  }
+  
+  .eye-blink-right {
+    transform-origin: 125px 105px;
+    animation: blink 4s infinite;
+  }
+
+  /* Body states */
+  #cute-character-wrapper[data-state="default"] {
+    animation: float 4s ease-in-out infinite;
+  }
+
+  #cute-character-wrapper[data-state="pleading"] {
+    animation: tremble 0.15s ease-in-out infinite;
+  }
+
+  #cute-character-wrapper[data-state="happy"] {
+    animation: bounce-slow 1.2s ease-in-out infinite;
+  }
+
+  @keyframes tremble {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(-1.5px, 1px) rotate(-0.5deg); }
+    75% { transform: translate(1.5px, -1px) rotate(0.5deg); }
+  }
+
+  /* Hide/Show classes depending on active state */
+  #cute-character-wrapper[data-state="default"] .eye-default { display: block; }
+  #cute-character-wrapper[data-state="default"] .mouth-default { display: block; }
+
+  #cute-character-wrapper[data-state="pleading"] .eye-default { display: none; }
+  #cute-character-wrapper[data-state="pleading"] .mouth-default { display: none; }
+  #cute-character-wrapper[data-state="pleading"] .eye-pleading { display: block; }
+  #cute-character-wrapper[data-state="pleading"] .mouth-pleading { display: block; }
+  #cute-character-wrapper[data-state="pleading"] .blush { fill: #ff8595; }
+  #cute-character-wrapper[data-state="pleading"] .paw-left { transform: translateY(-5px); }
+  #cute-character-wrapper[data-state="pleading"] .paw-right { transform: translateY(-5px); }
+
+  #cute-character-wrapper[data-state="happy"] .eye-default { display: none; }
+  #cute-character-wrapper[data-state="happy"] .mouth-default { display: none; }
+  #cute-character-wrapper[data-state="happy"] .eye-happy { display: block; }
+  #cute-character-wrapper[data-state="happy"] .mouth-happy { display: block; }
+  #cute-character-wrapper[data-state="happy"] .blush { fill: #ffaab3; }
+  #cute-character-wrapper[data-state="happy"] .paw-left { transform: translateY(-10px) scale(1.1); }
+  #cute-character-wrapper[data-state="happy"] .paw-right { transform: translateY(-10px) scale(1.1); }
+
+  /* Angry state styles */
+  #cute-character-wrapper[data-state="angry"] {
+    animation: tremble 0.08s ease-in-out infinite;
+  }
+  #cute-character-wrapper[data-state="angry"] .eye-default { display: block; }
+  #cute-character-wrapper[data-state="angry"] .mouth-default { display: none; }
+  #cute-character-wrapper[data-state="angry"] .mouth-pleading { display: block; }
+  #cute-character-wrapper[data-state="angry"] .eyebrows-angry { display: block; }
+  #cute-character-wrapper[data-state="angry"] .blush { fill: #ff4d6d; }
+  #cute-character-wrapper[data-state="angry"] .paw-left { transform: translateY(-15px) rotate(15deg); }
+  #cute-character-wrapper[data-state="angry"] .paw-right { transform: translateY(-15px) rotate(-15deg); }
+</style>

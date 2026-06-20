@@ -1,0 +1,80 @@
+---
+// src/components/HeartsBackground.astro
+---
+<div id="hearts-container" class="fixed inset-0 pointer-events-none z-0 overflow-hidden"></div>
+
+<script>
+  function createHeart() {
+    const container = document.getElementById('hearts-container');
+    if (!container) return;
+
+    const heart = document.createElement('div');
+    heart.classList.add('heart-particle');
+    
+    // Mix of cute pastel heart colors / emoji
+    const heartColors = ['❤️', '💖', '💝', '💕', '💗'];
+    heart.innerHTML = heartColors[Math.floor(Math.random() * heartColors.length)];
+    
+    const size = Math.random() * 20 + 12; // 12px to 32px
+    const startX = Math.random() * window.innerWidth;
+    const duration = Math.random() * 6 + 6; // 6s to 12s
+    const opacity = Math.random() * 0.4 + 0.3; // 0.3 to 0.7
+    const sway = Math.random() * 50 + 20; // 20px to 70px
+    
+    heart.style.left = `${startX}px`;
+    heart.style.top = `-30px`;
+    heart.style.fontSize = `${size}px`;
+    heart.style.opacity = `${opacity}`;
+    heart.style.animation = `fall ${duration}s linear forwards`;
+    heart.style.setProperty('--sway-x', `${sway}px`);
+    
+    container.appendChild(heart);
+    
+    setTimeout(() => {
+      heart.remove();
+    }, duration * 1000);
+  }
+
+  // Initial batch
+  for (let i = 0; i < 15; i++) {
+    setTimeout(createHeart, Math.random() * 5000);
+  }
+
+  // Periodic spawn
+  setInterval(createHeart, 500);
+
+  // Spawn heart bursts on click
+  window.addEventListener('click', (e) => {
+    // Avoid spawning bursts when clicking interactive buttons
+    const target = e.target as HTMLElement;
+    if (target && (target.closest('button') || target.closest('a'))) {
+      return;
+    }
+
+    const container = document.getElementById('hearts-container');
+    if (!container) return;
+
+    for (let i = 0; i < 6; i++) {
+      const heart = document.createElement('div');
+      heart.classList.add('heart-particle');
+      
+      const burstHearts = ['❤️', '💖', '✨', '🌸', '💕'];
+      heart.innerHTML = burstHearts[Math.floor(Math.random() * burstHearts.length)];
+      
+      const size = Math.random() * 15 + 10;
+      const duration = Math.random() * 2 + 1.5;
+      const sway = Math.random() * 80 - 40; // -40px to 40px
+      
+      heart.style.left = `${e.clientX}px`;
+      heart.style.top = `${e.clientY}px`;
+      heart.style.fontSize = `${size}px`;
+      
+      // Custom splash effect using variables
+      heart.style.animation = `fall ${duration}s cubic-bezier(0.1, 0.8, 0.3, 1) forwards`;
+      heart.style.setProperty('--sway-x', `${sway}px`);
+      
+      container.appendChild(heart);
+      setTimeout(() => heart.remove(), duration * 1000);
+    }
+  });
+</script>

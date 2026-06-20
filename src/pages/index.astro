@@ -1,0 +1,342 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CuteCharacter from '../components/CuteCharacter.astro';
+import HeartsBackground from '../components/HeartsBackground.astro';
+---
+
+<Layout title="Do you love me?">
+  <main class="min-h-screen w-full flex items-center justify-center p-4 relative overflow-hidden z-10">
+    <HeartsBackground />
+
+    <!-- Question View -->
+    <div id="question-card" class="bg-cream/90 backdrop-blur-md border-4 border-pink-soft rounded-3xl p-8 max-w-md w-full text-center shadow-2xl relative z-10 transition-all duration-500 transform scale-100 opacity-100 flex flex-col items-center">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-sweet-dark leading-tight mb-4">
+        Do you love me<span id="name-placeholder"></span>?
+      </h1>
+      
+      <p class="text-pink-primary/80 font-medium text-sm mb-6 max-w-xs">
+        Please choose carefully! 👉👈
+      </p>
+
+      <!-- Mount the Cute Character -->
+      <div id="question-character-placeholder" class="w-64 h-64 flex items-center justify-center">
+        <CuteCharacter />
+      </div>
+
+      <!-- Interactive Buttons -->
+      <div class="flex items-center justify-center gap-6 mt-8 w-full min-h-[80px] relative" id="buttons-container">
+        <button
+          id="yes-btn"
+          class="bg-pink-primary hover:bg-pink-hover active:scale-95 text-white font-bold text-lg px-8 py-3.5 rounded-full shadow-lg hover:shadow-pink-primary/40 transition-all duration-200 cursor-pointer animate-heart-pulse z-10"
+        >
+          Yes! 💖
+        </button>
+        
+        <button
+          id="no-btn"
+          class="bg-white hover:bg-pink-soft text-sweet-dark font-semibold text-base px-6 py-3 rounded-full border-2 border-pink-soft shadow-md transition-all duration-150 z-20"
+        >
+          No
+        </button>
+      </div>
+    </div>
+
+    <!-- Angry Sad View (Hidden initially) -->
+    <div id="angry-card" class="hidden bg-cream/95 backdrop-blur-md border-4 border-red-200 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl relative z-10 transition-all duration-700 transform scale-95 opacity-0 flex flex-col items-center">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-red-500 font-cursive leading-normal mb-4">
+        why don't you??!! 😡💔
+      </h1>
+      
+      <!-- Angry Character Placement -->
+      <div id="angry-character-placeholder" class="w-64 h-64 flex items-center justify-center"></div>
+
+      <button
+        id="try-again-btn"
+        class="mt-8 bg-pink-primary hover:bg-pink-hover active:scale-95 text-white font-bold text-base px-8 py-3 rounded-full shadow-lg hover:shadow-pink-primary/40 transition-all duration-150 cursor-pointer"
+      >
+        Wait, let me rethink! ❤️
+      </button>
+    </div>
+
+    <!-- Celebration Success View (Hidden initially) -->
+    <div id="celebration-card" class="hidden bg-cream/95 backdrop-blur-md border-4 border-pink-primary/20 rounded-3xl p-8 max-w-lg w-full text-center shadow-2xl relative z-10 transition-all duration-700 transform scale-95 opacity-0 flex flex-col items-center">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-pink-primary font-cursive leading-normal mb-4">
+        Yaaaaay! 🎉❤️
+      </h1>
+      
+      <p class="text-sweet-dark font-semibold text-lg mb-4" id="celebration-msg">
+        I love you so much too! You've made me the happiest! 🥰
+      </p>
+
+      <!-- Happy Character Clone Placement -->
+      <div id="celebration-character-placeholder" class="w-64 h-64 flex items-center justify-center"></div>
+
+      <!-- Birthday Card Overlay -->
+      <div class="mt-6 border-t-2 border-dashed border-pink-soft pt-6 w-full flex flex-col items-center">
+        <h2 class="text-2xl md:text-3xl font-extrabold text-pink-primary animate-bounce-slow">🎂 Happy Birthday, <span id="birthday-name"></span>! 🎁</h2>
+        <p class="text-sm text-sweet-dark/80 mt-2 max-w-xs leading-relaxed">
+          Wishing you a wonderful year filled with beautiful surprises, laughter, and endless sweetness! Here is your virtual birthday cake!
+        </p>
+        <span class="text-5xl mt-3 animate-float block">🎂🍰🎉🎈✨🌟</span>
+      </div>
+
+      <div class="mt-8 space-y-2">
+        <div class="inline-flex gap-2 bg-pink-soft/40 px-4 py-2 rounded-full text-xs text-pink-primary font-bold">
+          ✨ Sending virtual hugs & kisses ✨
+        </div>
+        <p class="text-[11px] text-sweet-dark/60 italic">
+          Press anywhere on the screen for heart bursts!
+        </p>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  // Get URL query params for personalization
+  const urlParams = new URLSearchParams(window.location.search);
+  const name = urlParams.get('name') || 'Aditi';
+  const namePlaceholder = document.getElementById('name-placeholder');
+  const birthdayNamePlaceholder = document.getElementById('birthday-name');
+  
+  if (namePlaceholder) {
+    namePlaceholder.textContent = `, ${name}`;
+  }
+  if (birthdayNamePlaceholder) {
+    birthdayNamePlaceholder.textContent = name;
+  }
+
+  const yesBtn = document.getElementById('yes-btn') as HTMLButtonElement;
+  const noBtn = document.getElementById('no-btn') as HTMLButtonElement;
+  const tryAgainBtn = document.getElementById('try-again-btn') as HTMLButtonElement;
+  const characterWrapper = document.getElementById('cute-character-wrapper');
+  
+  const questionCard = document.getElementById('question-card');
+  const angryCard = document.getElementById('angry-card');
+  const celebrationCard = document.getElementById('celebration-card');
+  
+  const questionCharacterPlaceholder = document.getElementById('question-character-placeholder');
+  const angryCharacterPlaceholder = document.getElementById('angry-character-placeholder');
+  const celebrationCharacterPlaceholder = document.getElementById('celebration-character-placeholder');
+
+  let evasionCount = 0;
+  const maxEvasions = 7;
+  let lastEvasionTime = 0;
+  const evasionCooldown = 300; // ms to prevent rapid multi-triggers
+
+  // Evasive algorithm parameters
+  const escapeRadius = 110; // Trigger distance in pixels
+
+  // Helper to place the No button at random safe location
+  function moveNoButton() {
+    const now = Date.now();
+    if (now - lastEvasionTime < evasionCooldown) {
+      return;
+    }
+    if (evasionCount >= maxEvasions) {
+      return; // Do not move anymore
+    }
+    
+    lastEvasionTime = now;
+    evasionCount++;
+    
+    // Change character expression to pleading
+    if (characterWrapper) {
+      characterWrapper.setAttribute('data-state', 'pleading');
+    }
+
+    const btnWidth = noBtn.offsetWidth;
+    const btnHeight = noBtn.offsetHeight;
+    
+    // Calculate boundaries relative to screen
+    const margin = 40;
+    const minX = margin;
+    const minY = margin;
+    const maxX = window.innerWidth - btnWidth - margin;
+    const maxY = window.innerHeight - btnHeight - margin;
+
+    // Pick a random location
+    let newX = Math.random() * (maxX - minX) + minX;
+    let newY = Math.random() * (maxY - minY) + minY;
+
+    // Check if new location is too close to the yes button
+    const yesRect = yesBtn.getBoundingClientRect();
+    const yesCenterX = yesRect.left + yesRect.width / 2;
+    const yesCenterY = yesRect.top + yesRect.height / 2;
+    
+    // If it's too close to Yes button, shift it
+    const distToYes = Math.hypot(newX + btnWidth / 2 - yesCenterX, newY + btnHeight / 2 - yesCenterY);
+    if (distToYes < 150) {
+      newX = (newX + 250) % maxX;
+      newY = (newY + 250) % maxY;
+    }
+
+    // Set absolute position styling
+    noBtn.style.position = 'fixed';
+    noBtn.style.left = `${newX}px`;
+    noBtn.style.top = `${newY}px`;
+    noBtn.style.zIndex = '999';
+
+    // Increase Yes button scale slightly for each evasion
+    const maxScale = 2.5;
+    const scale = Math.min(1 + evasionCount * 0.15, maxScale);
+    yesBtn.style.transform = `scale(${scale})`;
+
+    if (evasionCount >= maxEvasions) {
+      // Character goes extra sad when No becomes clickable
+      noBtn.textContent = 'No... 🥺';
+      noBtn.classList.remove('bg-white');
+      noBtn.classList.add('bg-red-50', 'border-red-300');
+    }
+  }
+
+  // Monitor cursor movement
+  document.addEventListener('mousemove', (e) => {
+    if (!noBtn || evasionCount >= maxEvasions) return;
+    
+    const rect = noBtn.getBoundingClientRect();
+    const btnCenterX = rect.left + rect.width / 2;
+    const btnCenterY = rect.top + rect.height / 2;
+    
+    const distance = Math.hypot(e.clientX - btnCenterX, e.clientY - btnCenterY);
+    
+    if (distance < escapeRadius) {
+      moveNoButton();
+    } else {
+      // If cursor is far, check if it's near yes button
+      const yesRect = yesBtn.getBoundingClientRect();
+      const yesCenterX = yesRect.left + yesRect.width / 2;
+      const yesCenterY = yesRect.top + yesRect.height / 2;
+      const distToYes = Math.hypot(e.clientX - yesCenterX, e.clientY - yesCenterY);
+
+      if (distToYes < 120) {
+        if (characterWrapper && characterWrapper.getAttribute('data-state') !== 'happy') {
+          characterWrapper.setAttribute('data-state', 'happy');
+        }
+      } else {
+        // Reset to default if not fleeing or near Yes
+        if (characterWrapper && characterWrapper.getAttribute('data-state') === 'pleading') {
+          characterWrapper.setAttribute('data-state', 'default');
+        }
+      }
+    }
+  });
+
+  // Mobile / touch interactions
+  noBtn.addEventListener('pointerdown', (e) => {
+    if (evasionCount < maxEvasions) {
+      e.preventDefault();
+      moveNoButton();
+    }
+  });
+  
+  noBtn.addEventListener('touchstart', (e) => {
+    if (evasionCount < maxEvasions) {
+      e.preventDefault();
+      moveNoButton();
+    }
+  });
+
+  // Action on NO button click
+  noBtn.addEventListener('click', (e) => {
+    if (evasionCount < maxEvasions) {
+      e.preventDefault();
+      moveNoButton();
+      return;
+    }
+
+    // Angry state trigger
+    if (characterWrapper) {
+      characterWrapper.setAttribute('data-state', 'angry');
+    }
+
+    // Hide question card
+    if (questionCard && angryCard) {
+      questionCard.classList.remove('scale-100', 'opacity-100');
+      questionCard.classList.add('scale-95', 'opacity-0');
+      
+      setTimeout(() => {
+        questionCard.classList.add('hidden');
+        angryCard.classList.remove('hidden');
+        
+        // Parent the character to the angry card
+        if (angryCharacterPlaceholder && characterWrapper) {
+          angryCharacterPlaceholder.appendChild(characterWrapper);
+        }
+
+        setTimeout(() => {
+          angryCard.classList.remove('scale-95', 'opacity-0');
+          angryCard.classList.add('scale-100', 'opacity-100');
+        }, 50);
+      }, 500);
+    }
+  });
+
+  // Try Again button click handler
+  tryAgainBtn.addEventListener('click', () => {
+    evasionCount = 0;
+    
+    // Reset buttons
+    noBtn.textContent = 'No';
+    noBtn.style.position = '';
+    noBtn.style.left = '';
+    noBtn.style.top = '';
+    noBtn.style.zIndex = '';
+    noBtn.className = "bg-white hover:bg-pink-soft text-sweet-dark font-semibold text-base px-6 py-3 rounded-full border-2 border-pink-soft shadow-md transition-all duration-150 z-20";
+    
+    yesBtn.style.transform = '';
+
+    if (characterWrapper) {
+      characterWrapper.setAttribute('data-state', 'default');
+    }
+
+    // Hide angry card
+    if (angryCard && questionCard) {
+      angryCard.classList.remove('scale-100', 'opacity-100');
+      angryCard.classList.add('scale-95', 'opacity-0');
+      
+      setTimeout(() => {
+        angryCard.classList.add('hidden');
+        questionCard.classList.remove('hidden');
+        
+        // Put character back
+        if (questionCharacterPlaceholder && characterWrapper) {
+          questionCharacterPlaceholder.appendChild(characterWrapper);
+        }
+
+        setTimeout(() => {
+          questionCard.classList.remove('scale-95', 'opacity-0');
+          questionCard.classList.add('scale-100', 'opacity-100');
+        }, 50);
+      }, 500);
+    }
+  });
+
+  // YES button clicked celebration sequence
+  yesBtn.addEventListener('click', () => {
+    if (characterWrapper) {
+      characterWrapper.setAttribute('data-state', 'happy');
+    }
+
+    // Hide question card
+    if (questionCard && celebrationCard) {
+      questionCard.classList.remove('scale-100', 'opacity-100');
+      questionCard.classList.add('scale-95', 'opacity-0');
+      
+      setTimeout(() => {
+        questionCard.classList.add('hidden');
+        celebrationCard.classList.remove('hidden');
+        
+        // Parent the character to celebration view
+        if (celebrationCharacterPlaceholder && characterWrapper) {
+          celebrationCharacterPlaceholder.appendChild(characterWrapper);
+        }
+        
+        setTimeout(() => {
+          celebrationCard.classList.remove('scale-95', 'opacity-0');
+          celebrationCard.classList.add('scale-100', 'opacity-100');
+        }, 50);
+      }, 500);
+    }
+  });
+</script>
