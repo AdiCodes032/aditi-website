@@ -184,6 +184,11 @@ import HeartsBackground from '../components/HeartsBackground.astro';
     pos.x = Math.max(marginX, Math.min(pos.x, maxX));
     pos.y = Math.max(marginY, Math.min(pos.y, maxY));
 
+    // Move button to body to avoid ancestor transform breaking fixed positioning
+    if (noBtn.parentElement !== document.body) {
+      document.body.appendChild(noBtn);
+    }
+
     noBtn.style.position = 'fixed';
     noBtn.style.left = `${pos.x}px`;
     noBtn.style.top = `${pos.y}px`;
@@ -311,6 +316,12 @@ import HeartsBackground from '../components/HeartsBackground.astro';
     noBtn.style.top = '';
     noBtn.style.zIndex = '';
     noBtn.className = "bg-white hover:bg-pink-soft text-sweet-dark font-semibold text-base px-6 py-3 rounded-full border-2 border-pink-soft shadow-md transition-all duration-150 z-20";
+    
+    // Move button back to the buttons container
+    const buttonsContainer = document.getElementById('buttons-container');
+    if (buttonsContainer && noBtn.parentElement !== buttonsContainer) {
+      buttonsContainer.appendChild(noBtn);
+    }
     
     yesBtn.style.transform = '';
 
