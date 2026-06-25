@@ -44,7 +44,7 @@ import HeartsBackground from '../components/HeartsBackground.astro';
     <!-- Angry Sad View (Hidden initially) -->
     <div id="angry-card" class="hidden bg-cream/95 backdrop-blur-md border-4 border-red-200 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl relative z-10 transition-all duration-700 transform scale-95 opacity-0 flex flex-col items-center">
       <h1 class="text-4xl md:text-5xl font-extrabold text-red-500 font-cursive leading-normal mb-4">
-        Why not??!! 😡💔
+        okay... if u say so 💔
       </h1>
       
       <!-- Angry Character Placement -->
@@ -261,9 +261,9 @@ import HeartsBackground from '../components/HeartsBackground.astro';
       return;
     }
 
-    // Angry state trigger
+    // Sad state trigger
     if (characterWrapper) {
-      characterWrapper.setAttribute('data-state', 'angry');
+      characterWrapper.setAttribute('data-state', 'sad');
     }
 
     // Hide question card
@@ -336,6 +336,11 @@ import HeartsBackground from '../components/HeartsBackground.astro';
 
   // YES button clicked celebration sequence
   yesBtn.addEventListener('click', () => {
+    // Hide the No button
+    if (noBtn) {
+      noBtn.style.display = 'none';
+    }
+
     if (characterWrapper) {
       characterWrapper.setAttribute('data-state', 'happy');
     }
