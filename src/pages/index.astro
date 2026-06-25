@@ -4,14 +4,14 @@ import CuteCharacter from '../components/CuteCharacter.astro';
 import HeartsBackground from '../components/HeartsBackground.astro';
 ---
 
-<Layout title="Do you love me?">
+<Layout title="Can I be part of the Alumni Team?">
   <main class="min-h-screen w-full flex items-center justify-center p-4 relative overflow-hidden z-10">
     <HeartsBackground />
 
     <!-- Question View -->
     <div id="question-card" class="bg-cream/90 backdrop-blur-md border-4 border-pink-soft rounded-3xl p-8 max-w-md w-full text-center shadow-2xl relative z-10 transition-all duration-500 transform scale-100 opacity-100 flex flex-col items-center">
       <h1 class="text-3xl md:text-4xl font-extrabold text-sweet-dark leading-tight mb-4">
-        Do you love me<span id="name-placeholder"></span>?
+        Can I be part of the Alumni Team?
       </h1>
       
       <p class="text-pink-primary/80 font-medium text-sm mb-6 max-w-xs">
@@ -44,7 +44,7 @@ import HeartsBackground from '../components/HeartsBackground.astro';
     <!-- Angry Sad View (Hidden initially) -->
     <div id="angry-card" class="hidden bg-cream/95 backdrop-blur-md border-4 border-red-200 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl relative z-10 transition-all duration-700 transform scale-95 opacity-0 flex flex-col items-center">
       <h1 class="text-4xl md:text-5xl font-extrabold text-red-500 font-cursive leading-normal mb-4">
-        why don't you??!! 😡💔
+        Why not??!! 😡💔
       </h1>
       
       <!-- Angry Character Placement -->
@@ -65,24 +65,20 @@ import HeartsBackground from '../components/HeartsBackground.astro';
       </h1>
       
       <p class="text-sweet-dark font-semibold text-lg mb-4" id="celebration-msg">
-        I love you so much too! You've made me the happiest! 🥰
+        Thank you!! looking forward to being a part of the family!
       </p>
 
       <!-- Happy Character Clone Placement -->
       <div id="celebration-character-placeholder" class="w-64 h-64 flex items-center justify-center"></div>
 
-      <!-- Birthday Card Overlay -->
+      <!-- Alumni Welcome Message -->
       <div class="mt-6 border-t-2 border-dashed border-pink-soft pt-6 w-full flex flex-col items-center">
-        <h2 class="text-2xl md:text-3xl font-extrabold text-pink-primary animate-bounce-slow">🎂 Happy Birthday, <span id="birthday-name"></span>! 🎁</h2>
-        <p class="text-sm text-sweet-dark/80 mt-2 max-w-xs leading-relaxed">
-          Wishing you a wonderful year filled with beautiful surprises, laughter, and endless sweetness! Here is your virtual birthday cake!
-        </p>
-        <span class="text-5xl mt-3 animate-float block">🎂🍰🎉🎈✨🌟</span>
+        <span class="text-5xl mb-2 animate-float block">🎉🎓🌟🚀✨🎊</span>
       </div>
 
       <div class="mt-8 space-y-2">
         <div class="inline-flex gap-2 bg-pink-soft/40 px-4 py-2 rounded-full text-xs text-pink-primary font-bold">
-          ✨ Sending virtual hugs & kisses ✨
+          ✨ Go Team! 🎉✨
         </div>
         <p class="text-[11px] text-sweet-dark/60 italic">
           Press anywhere on the screen for heart bursts!
@@ -93,19 +89,6 @@ import HeartsBackground from '../components/HeartsBackground.astro';
 </Layout>
 
 <script>
-  // Get URL query params for personalization
-  const urlParams = new URLSearchParams(window.location.search);
-  const name = urlParams.get('name') || 'Aditi';
-  const namePlaceholder = document.getElementById('name-placeholder');
-  const birthdayNamePlaceholder = document.getElementById('birthday-name');
-  
-  if (namePlaceholder) {
-    namePlaceholder.textContent = `, ${name}`;
-  }
-  if (birthdayNamePlaceholder) {
-    birthdayNamePlaceholder.textContent = name;
-  }
-
   const yesBtn = document.getElementById('yes-btn') as HTMLButtonElement;
   const noBtn = document.getElementById('no-btn') as HTMLButtonElement;
   const tryAgainBtn = document.getElementById('try-again-btn') as HTMLButtonElement;
